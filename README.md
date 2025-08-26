@@ -4,7 +4,7 @@
 [![Documentation](https://docs.rs/toolchest/badge.svg)](https://docs.rs/toolchest)
 [![CI](https://github.com/danjloveless/toolchest/workflows/CI/badge.svg)](https://github.com/danjloveless/toolchest/actions)
 
-Your essential collection of Rust utilities - everything `itertools` doesn't do.
+Your essential collection of Rust utilities – everything `itertools` doesn't do.
 
 ## Why toolchest?
 
@@ -17,8 +17,9 @@ Together, they provide a complete utility toolkit without scattered dependencies
 ## Quick Start
 
 ```rust
-use itertools::Itertools;     // For collections
+use itertools::Itertools;     // For collection/iterator helpers
 use toolchest::prelude::*;    // For everything else
+use std::time::Duration;
 
 // String manipulation
 let snake = strings::to_snake_case("HelloWorld");  // "hello_world"
@@ -27,10 +28,10 @@ let snake = strings::to_snake_case("HelloWorld");  // "hello_world"
 let rounded = math::round(3.14159, 2);  // 3.14
 let clamped = math::clamp(15, 0, 10);   // 10
 
-// Deep operations
+// Deep operations (example)
 // let merged = deep::merge(&default_config, &user_config);
 
-// Function combinators
+// Function combinators (example)
 // let search = functions::debounce(expensive_search, Duration::from_millis(300));
 
 // Type utilities
@@ -43,8 +44,14 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-toolchest = "1.0"
+toolchest = "0.0.1"
 ```
+
+MSRV: 1.81.0
+
+Optional features:
+- `json` – serde/serde_json helpers
+- `fs` – filesystem utilities (walkdir)
 
 ## Modules at a Glance
 
@@ -89,10 +96,10 @@ For full API details, see the docs: https://docs.rs/toolchest
 
 ## Performance
 
-- Zero runtime dependencies
+- Zero runtime dependencies by default (feature-gated extras)
 - Zero-cost abstractions
 - Optimized for common cases
-- Optional `no_std` support
+- Partial `no_std` support
 
 ## Migration from Common Crates
 
