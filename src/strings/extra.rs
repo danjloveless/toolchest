@@ -348,7 +348,10 @@ pub fn split_words(s: &str) -> Vec<String> {
         }
         if ch.is_ascii_uppercase()
             && !current.is_empty()
-            && current.chars().last().is_some_and(|c| c.is_ascii_lowercase())
+            && current
+                .chars()
+                .last()
+                .is_some_and(|c| c.is_ascii_lowercase())
         {
             words.push(current.clone());
             current.clear();
