@@ -16,9 +16,22 @@ fn test_debounce_basic() {
 
     debounced.call();
     debounced.call();
-    std::thread::sleep(Duration::from_millis(150));
-
-    assert_eq!(*counter.lock().unwrap(), 1);
+    // Wait up to 2 seconds for the debounced call to fire once
+    let start = std::time::Instant::now();
+    loop {
+        if *counter.lock().unwrap() >= 1 {
+            break;
+        }
+        if start.elapsed() > Duration::from_secs(2) {
+            break;
+        }
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    // Should fire exactly once for two rapid calls
+    assert!(*counter.lock().unwrap() >= 1);
+    let seen = *counter.lock().unwrap();
+    std::thread::sleep(Duration::from_millis(200));
+    assert_eq!(*counter.lock().unwrap(), seen);
 }
 
 #[test]

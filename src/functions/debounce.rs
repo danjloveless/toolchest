@@ -1,11 +1,48 @@
-//! Debounce implementation
+//! Debouncing utilities.
+//!
+//! Debouncing delays the execution of a function until a quiet period has
+//! elapsed. Repeated calls reset the timer; only the last call in a burst will
+//! execute after the delay.
+//!
+//! This module exposes:
+//! - [`Debounced`] — a handle that schedules execution based on calls.
+//! - [`debounce`] — constructor producing a [`Debounced`] instance.
+//!
+//! Behavior:
+//! - Each `call` schedules execution at `now + delay` and cancels any previously
+//!   scheduled run that has not yet executed.
+//! - The first call starts a background worker thread to manage timing.
+//! - The wrapped function executes on that worker thread.
+//!
+//! Basic example:
+//! ```rust
+//! use toolchest::functions::debounce;
+//! use std::time::Duration;
+//! use std::thread::sleep;
+//! use std::sync::atomic::{AtomicUsize, Ordering};
+//! use std::sync::Arc;
+//!
+//! let counter = Arc::new(AtomicUsize::new(0));
+//! let c = Arc::clone(&counter);
+//! let d = debounce(move || { c.fetch_add(1, Ordering::SeqCst); }, Duration::from_millis(20));
+//! d.call();
+//! d.call();
+//! d.call();
+//! // Only one execution after the quiet period
+//! sleep(Duration::from_millis(40));
+//! assert_eq!(counter.load(Ordering::SeqCst), 1);
+//! ```
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
 use std::time::{Duration, Instant};
 
-/// A debounced function wrapper
+/// A debounced function wrapper.
+///
+/// Maintains a deadline that is pushed forward on each `call`. When the
+/// deadline elapses without further calls, the wrapped function is executed on
+/// a background thread exactly once for that burst.
 pub struct Debounced<F> {
     func: Arc<Mutex<F>>,
     delay: Duration,
@@ -18,7 +55,26 @@ impl<F> Debounced<F>
 where
     F: Fn() + Send + 'static,
 {
-    /// Invoke the debounced function; schedules execution after the delay if no newer call occurs
+    /// Invoke the debounced function; schedules execution after the delay if no newer call occurs.
+    ///
+    /// The function will execute on a background worker thread when the quiet
+    /// period elapses. Multiple rapid `call`s collapse into a single execution.
+    ///
+    /// Example:
+    /// ```rust
+    /// use toolchest::functions::debounce;
+    /// use std::time::Duration;
+    /// use std::thread::sleep;
+    /// use std::sync::atomic::{AtomicUsize, Ordering};
+    /// use std::sync::Arc;
+    /// let x = Arc::new(AtomicUsize::new(0));
+    /// let xc = Arc::clone(&x);
+    /// let d = debounce(move || { xc.fetch_add(1, Ordering::SeqCst); }, Duration::from_millis(10));
+    /// d.call();
+    /// d.call();
+    /// sleep(Duration::from_millis(50));
+    /// assert_eq!(x.load(Ordering::SeqCst), 1);
+    /// ```
     pub fn call(&self) {
         // Update deadline to now + delay and notify worker
         {
@@ -61,7 +117,18 @@ where
     }
 }
 
-/// Create a debounced version of a function
+/// Create a debounced version of a function.
+///
+/// Returns a [`Debounced`] handle that schedules the provided function to run
+/// after a quiet period of `delay` following the last `call`.
+///
+/// Example:
+/// ```rust
+/// use toolchest::functions::debounce;
+/// use std::time::Duration;
+/// let d = debounce(move || println!("run once after quiet period"), Duration::from_millis(5));
+/// d.call();
+/// ```
 pub fn debounce<F>(func: F, delay: Duration) -> Debounced<F>
 where
     F: Fn() + Send + 'static,

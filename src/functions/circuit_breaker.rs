@@ -1,10 +1,30 @@
-//! Basic circuit breaker
+//! Basic circuit breaker.
+//!
+//! A circuit breaker guards an operation from repeated failures by opening the
+//! circuit after a threshold of errors, then allowing a cooldown period before
+//! probing (`HalfOpen`) and potentially closing again on success.
+//!
+//! States:
+//! - [`BreakerState::Closed`] — calls pass through, failures are counted
+//! - [`BreakerState::Open`] — calls are rejected until cooldown elapses
+//! - [`BreakerState::HalfOpen`] — a probing state; success closes, failure reopens
+//!
+//! Basic example:
+//! ```rust
+//! use toolchest::functions::{CircuitBreaker, BreakerState};
+//! use std::time::Duration;
+//!
+//! let cb = CircuitBreaker::new(1, Duration::from_millis(5));
+//! // First failure opens the circuit
+//! let _ = cb.call::<_, (), &str>(|| Err("boom"));
+//! assert_eq!(cb.state(), BreakerState::Open);
+//! ```
 
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 use std::{error::Error, fmt};
 
-/// Circuit breaker state
+/// Circuit breaker state.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum BreakerState {
     /// Closed: calls pass, failures counted
@@ -15,7 +35,10 @@ pub enum BreakerState {
     HalfOpen,
 }
 
-/// Simple circuit breaker with failure threshold and cooldown
+/// Simple circuit breaker with failure threshold and cooldown.
+///
+/// - `threshold`: consecutive failure count that trips the breaker
+/// - `cooldown`: duration to stay open before entering `HalfOpen`
 pub struct CircuitBreaker {
     state: Arc<Mutex<BreakerState>>,
     failures: Arc<Mutex<u32>>,
@@ -24,7 +47,7 @@ pub struct CircuitBreaker {
     cooldown: Duration,
 }
 
-/// Error returned by `CircuitBreaker::call`
+/// Error returned by `CircuitBreaker::call`.
 #[derive(Debug)]
 pub enum CircuitBreakerError<E> {
     /// The circuit is open and rejecting calls
@@ -45,7 +68,7 @@ impl<E: fmt::Display> fmt::Display for CircuitBreakerError<E> {
 impl<E: fmt::Debug + fmt::Display> Error for CircuitBreakerError<E> {}
 
 impl CircuitBreaker {
-    /// Create a new circuit breaker
+    /// Create a new circuit breaker.
     pub fn new(threshold: u32, cooldown: Duration) -> Self {
         Self {
             state: Arc::new(Mutex::new(BreakerState::Closed)),
@@ -56,12 +79,36 @@ impl CircuitBreaker {
         }
     }
 
-    /// Get current state
+    /// Get current state.
     pub fn state(&self) -> BreakerState {
         *self.state.lock().unwrap()
     }
 
-    /// Call an operation guarded by the breaker
+    /// Call an operation guarded by the breaker.
+    ///
+    /// - On `Open`, immediately returns `Err(CircuitBreakerError::Open)`.
+    /// - On `Closed`/`HalfOpen`, executes the operation; success resets failure
+    ///   count (and closes if probing), failure increments count and may open.
+    ///
+    /// Example success path:
+    /// ```rust
+    /// use toolchest::functions::CircuitBreaker;
+    /// use std::time::Duration;
+    /// let cb = CircuitBreaker::new(2, Duration::from_millis(10));
+    /// let res: Result<i32, _> = cb.call::<_, i32, &str>(|| Ok(7));
+    /// assert_eq!(res.unwrap(), 7);
+    /// ```
+    ///
+    /// Example open behavior:
+    /// ```rust
+    /// use toolchest::functions::{CircuitBreaker, BreakerState, CircuitBreakerError};
+    /// use std::time::Duration;
+    /// let cb = CircuitBreaker::new(1, Duration::from_millis(50));
+    /// let _: Result<(), CircuitBreakerError<&str>> = cb.call(|| Err("boom"));
+    /// assert_eq!(cb.state(), BreakerState::Open);
+    /// let r: Result<(), CircuitBreakerError<&str>> = cb.call(|| Ok(()));
+    /// assert!(matches!(r, Err(CircuitBreakerError::Open)));
+    /// ```
     pub fn call<F, T, E>(&self, mut op: F) -> Result<T, CircuitBreakerError<E>>
     where
         F: FnMut() -> Result<T, E>,
