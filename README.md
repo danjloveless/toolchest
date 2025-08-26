@@ -97,6 +97,35 @@ For full API details, see the docs: https://docs.rs/toolchest
 - Optimized for common cases
 - Partial `no_std` support
 
+## Comparison with other crates
+
+| Crate | What it is | Overlap with `toolchest` | When to choose it |
+| --- | --- | --- | --- |
+| [`itertools`](https://crates.io/crates/itertools) | Iterator adaptors and utilities | Some collection helpers overlap conceptually (chunking, grouping, cartesian, windows) | You need advanced iterator combinators and zero-allocation streaming transforms |
+| [`heck`](https://crates.io/crates/heck) | String case conversions | Overlaps with `strings::case` | You only need case conversion and prefer a focused crate |
+| [`convert_case`](https://crates.io/crates/convert_case) | String case conversions | Overlaps with `strings::case` | Same as above; pick one of these if you only need this |
+| [`rand`](https://crates.io/crates/rand) | RNGs and distributions | `random` provides quick, non-crypto helpers only | You need configurable RNGs, distributions, or crypto-secure randomness |
+| [`time`](https://crates.io/crates/time) / [`chrono`](https://crates.io/crates/chrono) | Date/time types and parsing | `time` module has humanize/parse/stopwatch/backoff; not a full datetime stack | You need full-featured datetime, time zones, formatting/parsing |
+| [`regex`](https://crates.io/crates/regex) | Regular expressions | Minimal overlap; `strings`/`validation` provide common checks | You need general-purpose pattern matching |
+| [`statrs`](https://crates.io/crates/statrs) | Statistics and distributions | `math` has common rounding/stats helpers | You need rich statistical distributions and tests |
+| [`serde`/`serde_json`](https://serde.rs/) | Serialization and JSON | Optional `json` feature provides helpers around them | You are doing full serialization/deserialization work
+
+## Why not just use X?
+
+- If you only need advanced iterator adaptors, use **`itertools`**.
+- If you need cryptographically secure randomness, distributions, or a configurable RNG, use **`rand`** (and friends like `rand_chacha`).
+- If you need full datetime handling (time zones, formatting, parsing), use **`time`** or **`chrono`**.
+- If you need regex-powered text processing, use **`regex`**.
+- If you only need string case conversion, use **`heck`** or **`convert_case`**.
+- If you need heavy statistics and probability distributions, use **`statrs`**.
+
+`toolchest` aims to cover a broad set of day-to-day utilities with:
+- Small, focused APIs you can use in minutes
+- Zero default runtime dependencies and feature-gated extras
+- Pragmatic, non-crypto defaults where appropriate
+
+It complements the crates above; use them when you need depth, use `toolchest` when you want breadth without pulling in many dependencies.
+
 ## Migration from Common Crates
 
 Replacing multiple utility crates with `toolchest`:

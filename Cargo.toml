@@ -16,7 +16,6 @@ exclude = [
     ".github/*",
     "tests/*",
     "benches/*",
-    "examples/*",
     ".gitignore",
 ]
 
