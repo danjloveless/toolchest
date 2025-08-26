@@ -13,5 +13,3 @@ fn test_hashes_basic() {
     assert_ne!(m, 0);
     assert_eq!(consistent_hash("key", 10) < 10, true);
 }
-
-

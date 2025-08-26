@@ -6,10 +6,13 @@ use toolchest::functions::*;
 fn test_debounce_basic() {
     let counter = Arc::new(Mutex::new(0u32));
     let c2 = Arc::clone(&counter);
-    let debounced = debounce(move || {
-        let mut v = c2.lock().unwrap();
-        *v += 1;
-    }, Duration::from_millis(50));
+    let debounced = debounce(
+        move || {
+            let mut v = c2.lock().unwrap();
+            *v += 1;
+        },
+        Duration::from_millis(50),
+    );
 
     debounced.call();
     debounced.call();
@@ -57,7 +60,9 @@ fn test_compose_pipe_tap() {
     assert_eq!(v, 8);
     use std::cell::Cell;
     let seen = Cell::new(0);
-    let v = tap(5, |r| { seen.set(*r); });
+    let v = tap(5, |r| {
+        seen.set(*r);
+    });
     assert_eq!(v, 5);
     assert_eq!(seen.get(), 5);
 }
@@ -66,7 +71,10 @@ fn test_compose_pipe_tap() {
 fn test_with_timeout() {
     let res = with_timeout(Duration::from_millis(50), || 42);
     assert_eq!(res, Some(42));
-    let res = with_timeout(Duration::from_millis(10), || { std::thread::sleep(Duration::from_millis(50)); 1 });
+    let res = with_timeout(Duration::from_millis(10), || {
+        std::thread::sleep(Duration::from_millis(50));
+        1
+    });
     assert_eq!(res, None);
 }
 
@@ -75,7 +83,11 @@ fn test_retry_with_backoff() {
     let mut attempts = 0u32;
     let res = retry_with_backoff(3, Duration::from_millis(1), || {
         attempts += 1;
-        if attempts < 2 { Err(()) } else { Ok(7) }
+        if attempts < 2 {
+            Err(())
+        } else {
+            Ok(7)
+        }
     });
     assert_eq!(res, Ok(7));
 }
@@ -85,7 +97,11 @@ fn test_retry() {
     let mut attempts = 0u32;
     let res = retry(3, None, || {
         attempts += 1;
-        if attempts < 3 { Err(()) } else { Ok(42) }
+        if attempts < 3 {
+            Err(())
+        } else {
+            Ok(42)
+        }
     });
     assert_eq!(res, Ok(42));
 }
@@ -94,10 +110,13 @@ fn test_retry() {
 fn test_throttle_basic() {
     let counter = Arc::new(Mutex::new(0u32));
     let c2 = Arc::clone(&counter);
-    let throttled = throttle(move || {
-        let mut v = c2.lock().unwrap();
-        *v += 1;
-    }, Duration::from_millis(50));
+    let throttled = throttle(
+        move || {
+            let mut v = c2.lock().unwrap();
+            *v += 1;
+        },
+        Duration::from_millis(50),
+    );
 
     throttled.call();
     throttled.call();
@@ -107,5 +126,3 @@ fn test_throttle_basic() {
     throttled.call();
     assert_eq!(*counter.lock().unwrap(), 2);
 }
-
-

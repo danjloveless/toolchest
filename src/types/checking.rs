@@ -40,5 +40,3 @@ impl<K, V> IsEmpty for std::collections::HashMap<K, V> {
 pub fn is_empty<T: IsEmpty>(value: &T) -> bool {
     value.is_empty()
 }
-
-

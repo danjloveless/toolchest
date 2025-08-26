@@ -27,7 +27,13 @@ fn test_extra_strings() {
     assert_eq!(singularize("boxes"), "box");
     assert_eq!(levenshtein_distance("kitten", "sitting"), 3);
     assert_eq!(extra::damerau_levenshtein("ca", "ac"), 1);
-    let tpl = extra::template("Hello {{ name }}!", |k| if k=="name" { Some("Rust".into()) } else { None });
+    let tpl = extra::template("Hello {{ name }}!", |k| {
+        if k == "name" {
+            Some("Rust".into())
+        } else {
+            None
+        }
+    });
     assert_eq!(tpl, "Hello Rust!");
 }
 
@@ -66,5 +72,3 @@ proptest! {
         assert!(result.len() <= max_len.max(3));
     }
 }
-
-

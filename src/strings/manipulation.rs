@@ -47,7 +47,7 @@ pub fn pad_start(s: &str, target_len: usize, pad_char: char) -> String {
     } else {
         let pad_count = target_len - current_len;
         let padding: String = pad_char.to_string().repeat(pad_count);
-        format!("{}{}", padding, s)
+        format!("{padding}{s}")
     }
 }
 
@@ -59,7 +59,7 @@ pub fn pad_end(s: &str, target_len: usize, pad_char: char) -> String {
     } else {
         let pad_count = target_len - current_len;
         let padding: String = pad_char.to_string().repeat(pad_count);
-        format!("{}{}", s, padding)
+        format!("{s}{padding}")
     }
 }
 
@@ -86,5 +86,3 @@ pub fn uncapitalize(s: &str) -> String {
 pub fn trim(s: &str) -> String {
     s.trim().to_string()
 }
-
-

@@ -4,7 +4,11 @@ use std::thread;
 use std::time::Duration;
 
 /// Retry with exponential backoff starting at `base_delay`
-pub fn retry_with_backoff<F, T, E>(mut attempts: u32, base_delay: Duration, mut op: F) -> Result<T, E>
+pub fn retry_with_backoff<F, T, E>(
+    mut attempts: u32,
+    base_delay: Duration,
+    mut op: F,
+) -> Result<T, E>
 where
     F: FnMut() -> Result<T, E>,
 {
@@ -23,5 +27,3 @@ where
         }
     }
 }
-
-

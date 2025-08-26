@@ -31,10 +31,8 @@ fn test_deep_merge_hashmaps() {
     let mut b: HashMap<String, i32> = HashMap::new();
     b.insert("a".into(), 2);
     b.insert("b".into(), 3);
-    
+
     let merged = merge(&a, &b);
     assert_eq!(merged.get("a"), Some(&2));
     assert_eq!(merged.get("b"), Some(&3));
 }
-
-

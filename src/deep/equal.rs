@@ -11,12 +11,10 @@ where
     if a.len() != b.len() {
         return false;
     }
-    a.iter().all(|(k, v)| b.get(k).map_or(false, |vb| vb == v))
+    a.iter().all(|(k, v)| b.get(k) == Some(v))
 }
 
 /// Deep equality for slices using PartialEq
 pub fn deep_equal_slice<T: PartialEq>(a: &[T], b: &[T]) -> bool {
     a == b
 }
-
-

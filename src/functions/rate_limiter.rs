@@ -1,7 +1,7 @@
 //! Simple token-bucket rate limiter
 
-use std::time::Instant;
 use std::sync::{Arc, Mutex};
+use std::time::Instant;
 
 /// Token-bucket rate limiter
 pub struct RateLimiter {
@@ -44,5 +44,3 @@ impl RateLimiter {
         }
     }
 }
-
-

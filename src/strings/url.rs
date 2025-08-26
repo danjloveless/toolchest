@@ -5,9 +5,11 @@ pub fn url_encode(input: &str) -> String {
     let mut out = String::with_capacity(input.len());
     for b in input.bytes() {
         match b {
-            b'-' | b'_' | b'.' | b'~' | b'0'..=b'9' | b'A'..=b'Z' | b'a'..=b'z' => out.push(b as char),
+            b'-' | b'_' | b'.' | b'~' | b'0'..=b'9' | b'A'..=b'Z' | b'a'..=b'z' => {
+                out.push(b as char)
+            }
             b' ' => out.push_str("%20"),
-            _ => out.push_str(&format!("%{:02X}", b)),
+            _ => out.push_str(&format!("%{b:02X}")),
         }
     }
     out
@@ -40,5 +42,3 @@ fn hex_val(b: u8) -> Option<u8> {
         _ => None,
     }
 }
-
-

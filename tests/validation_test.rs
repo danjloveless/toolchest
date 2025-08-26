@@ -7,5 +7,3 @@ fn test_validation_basics() {
     assert!(is_ascii("hello"));
     assert!(is_utf8(b"hello"));
 }
-
-

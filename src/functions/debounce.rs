@@ -1,7 +1,7 @@
 //! Debounce implementation
 
-use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
@@ -23,7 +23,7 @@ where
         let call_seq = Arc::clone(&self.call_seq);
         // Assign a unique id to this call; only the latest id may execute after delay
         let id = call_seq.fetch_add(1, Ordering::SeqCst) + 1;
-        
+
         thread::spawn(move || {
             thread::sleep(delay);
             // Only execute if no newer call occurred during the delay
@@ -46,5 +46,3 @@ where
         call_seq: Arc::new(AtomicU64::new(0)),
     }
 }
-
-

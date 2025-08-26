@@ -28,5 +28,3 @@ fn test_parse_and_default() {
     assert_eq!(parse_or_default::<i32>("x"), 0);
     assert_eq!(parse_or::<i32>("x", 7), 7);
 }
-
-

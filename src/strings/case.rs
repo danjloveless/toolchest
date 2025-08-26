@@ -1,7 +1,7 @@
 //! Case conversion utilities
 
 /// Convert a string to snake_case
-/// 
+///
 /// # Examples
 /// ```
 /// use toolchest::strings::to_snake_case;
@@ -15,7 +15,7 @@ pub fn to_snake_case(s: &str) -> String {
     let mut prev_is_upper = false;
     let mut first = true;
     let mut last_was_sep = false;
-    
+
     for ch in s.chars() {
         if ch.is_ascii_uppercase() {
             if !first && !prev_is_upper && !last_was_sep {
@@ -37,7 +37,7 @@ pub fn to_snake_case(s: &str) -> String {
         }
         first = false;
     }
-    
+
     result
 }
 
@@ -47,7 +47,7 @@ pub fn to_camel_case(s: &str) -> String {
     let snake = to_snake_case(s);
     let mut result = String::with_capacity(snake.len());
     let mut capitalize_next = false;
-    
+
     for (i, ch) in snake.chars().enumerate() {
         if ch == '_' {
             capitalize_next = true;
@@ -58,12 +58,12 @@ pub fn to_camel_case(s: &str) -> String {
             result.push(ch);
         }
     }
-    
+
     // First character should be lowercase for camelCase
     if let Some(first) = result.chars().next() {
         result = format!("{}{}", first.to_lowercase(), &result[1..]);
     }
-    
+
     result
 }
 
@@ -98,5 +98,3 @@ pub fn to_title_case(s: &str) -> String {
         .collect::<Vec<_>>()
         .join(" ")
 }
-
-

@@ -1,5 +1,5 @@
-use toolchest::time::*;
 use std::time::{Duration, Instant};
+use toolchest::time::*;
 
 #[test]
 fn test_duration_parse_humanize() {
@@ -22,5 +22,3 @@ fn test_backoff_iter() {
     assert_eq!(it.next().unwrap(), Duration::from_millis(10));
     assert_eq!(it.next().unwrap(), Duration::from_millis(20));
 }
-
-

@@ -15,10 +15,14 @@ fn test_math_extras() {
     assert_eq!(numeric::radians_to_degrees(std::f64::consts::PI), 180.0);
     assert!((numeric::sigmoid(0.0) - 0.5).abs() < 1e-12);
     assert_eq!(numeric::normalize(5.0, 0.0, 10.0), 0.5);
-    assert_eq!(numeric::euclidean_distance(&[0.0,0.0], &[3.0,4.0]), 5.0);
-    assert_eq!(numeric::manhattan_distance(&[0.0,0.0], &[3.0,4.0]), 7.0);
-    assert_eq!(numeric::dot_product(&[1.0,2.0,3.0], &[4.0,5.0,6.0]), 32.0);
-    assert_eq!(numeric::cross_product([1.0,0.0,0.0],[0.0,1.0,0.0]), [0.0,0.0,1.0]);
+    assert_eq!(numeric::euclidean_distance(&[0.0, 0.0], &[3.0, 4.0]), 5.0);
+    assert_eq!(numeric::manhattan_distance(&[0.0, 0.0], &[3.0, 4.0]), 7.0);
+    assert_eq!(
+        numeric::dot_product(&[1.0, 2.0, 3.0], &[4.0, 5.0, 6.0]),
+        32.0
+    );
+    assert_eq!(
+        numeric::cross_product([1.0, 0.0, 0.0], [0.0, 1.0, 0.0]),
+        [0.0, 0.0, 1.0]
+    );
 }
-
-

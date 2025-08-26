@@ -12,13 +12,13 @@
 //!
 //! ```rust
 //! use toolchest::prelude::*;
-//! 
+//!
 //! // String manipulation
 //! let snake = strings::to_snake_case("HelloWorld");
-//! 
+//!
 //! // Math utilities  
 //! let clamped = math::clamp(15, 0, 10);
-//! 
+//!
 //! // Type checking
 //! let is_empty = types::is_empty::<Vec<i32>>(&vec![]);
 //! ```
@@ -37,23 +37,22 @@ pub mod functions;
 
 pub mod types;
 
-pub mod prelude;
 #[cfg(feature = "std")]
 pub mod collections;
 #[cfg(feature = "std")]
-pub mod time;
-#[cfg(feature = "std")]
-pub mod random;
+pub mod encoding;
 #[cfg(feature = "std")]
 pub mod hash;
 #[cfg(feature = "std")]
 pub mod io;
+pub mod prelude;
+#[cfg(feature = "std")]
+pub mod random;
+#[cfg(feature = "std")]
+pub mod time;
 #[cfg(feature = "std")]
 pub mod validation;
-#[cfg(feature = "std")]
-pub mod encoding;
 
 // Re-export commonly used items at crate root
 #[cfg(feature = "std")]
 pub use strings::{to_camel_case, to_kebab_case, to_snake_case};
-

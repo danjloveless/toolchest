@@ -36,5 +36,3 @@ fn test_percentile_and_numeric() {
     assert_eq!(gcd_u64(12, 18), 6);
     assert_eq!(lcm_u64(12, 18), 36);
 }
-
-

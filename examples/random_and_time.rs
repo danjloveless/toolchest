@@ -1,5 +1,5 @@
-use toolchest::{random, time};
 use std::time::Duration;
+use toolchest::{random, time};
 
 fn main() {
     let choice = random::random_choice(&["red", "green", "blue"]).unwrap();
@@ -11,4 +11,3 @@ fn main() {
     });
     println!("val={}, elapsed={}", val, time::duration_humanize(took));
 }
-

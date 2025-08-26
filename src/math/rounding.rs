@@ -9,7 +9,7 @@ pub fn round(value: f64, precision: u32) -> f64 {
 /// Floor a float to n decimal places
 pub fn floor(value: f64, precision: u32) -> f64 {
     let multiplier = 10_f64.powi(precision as i32);
-    (value * multiplier).floor() / multiplier  
+    (value * multiplier).floor() / multiplier
 }
 
 /// Ceil a float to n decimal places
@@ -34,5 +34,3 @@ pub fn clamp<T: PartialOrd>(value: T, min: T, max: T) -> T {
 pub fn in_range<T: PartialOrd>(value: T, range: core::ops::Range<T>) -> bool {
     value >= range.start && value < range.end
 }
-
-

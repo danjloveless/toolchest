@@ -9,5 +9,3 @@ fn test_hex_rot13_caesar() {
     assert_eq!(rot13("uryyb"), "hello");
     assert_eq!(caesar_cipher("abc", 3), "def");
 }
-
-

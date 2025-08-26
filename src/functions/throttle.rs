@@ -33,7 +33,7 @@ where
                 }
             }
         };
-        
+
         if should_execute {
             (self.func)();
         }
@@ -51,5 +51,3 @@ where
         last_call: Arc::new(Mutex::new(None)),
     }
 }
-
-

@@ -30,5 +30,3 @@ pub fn escape_regex(input: &str) -> String {
     }
     out
 }
-
-

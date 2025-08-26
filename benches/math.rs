@@ -13,5 +13,3 @@ fn bench_clamp(c: &mut Criterion) {
 
 criterion_group!(benches, bench_rounding, bench_clamp);
 criterion_main!(benches);
-
-

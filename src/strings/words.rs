@@ -23,5 +23,3 @@ pub fn words(input: &str) -> Vec<&str> {
 pub fn word_count(input: &str) -> usize {
     words(input).len()
 }
-
-

@@ -44,12 +44,10 @@ pub fn merge_all<T: DeepMerge + Clone>(values: &[&T]) -> Option<T> {
     if values.is_empty() {
         return None;
     }
-    
+
     let mut result = values[0].clone();
     for value in &values[1..] {
         result.deep_merge(value);
     }
     Some(result)
 }
-
-

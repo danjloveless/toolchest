@@ -17,5 +17,3 @@ where
     });
     rx.recv_timeout(dur).ok()
 }
-
-

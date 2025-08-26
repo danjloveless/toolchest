@@ -28,5 +28,3 @@ where
 {
     s.parse().unwrap_or(default)
 }
-
-

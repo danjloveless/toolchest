@@ -37,10 +37,10 @@ pub fn median(values: &mut [f64]) -> f64 {
     if values.is_empty() {
         return 0.0;
     }
-    
+
     values.sort_by(|a, b| a.partial_cmp(b).unwrap());
     let mid = values.len() / 2;
-    
+
     if values.len() % 2 == 0 {
         (values[mid - 1] + values[mid]) / 2.0
     } else {
@@ -73,10 +73,10 @@ pub fn percentile(values: &mut [f64], p: f64) -> f64 {
     }
     let p = p.clamp(0.0, 100.0);
     values.sort_by(|a, b| a.partial_cmp(b).unwrap());
-    if values.len() == 1 { return values[0]; }
+    if values.len() == 1 {
+        return values[0];
+    }
     let pos = (p / 100.0) * ((values.len() - 1) as f64);
     let idx = pos.round() as usize;
     values[idx]
 }
-
-

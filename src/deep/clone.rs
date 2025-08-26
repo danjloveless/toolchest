@@ -17,5 +17,3 @@ impl<T: Clone> DeepClone for T {
 pub fn clone<T: DeepClone>(value: &T) -> T {
     value.deep_clone()
 }
-
-

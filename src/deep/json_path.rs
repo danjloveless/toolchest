@@ -26,7 +26,9 @@ pub fn json_get<'a>(value: &'a Value, path: &str) -> Option<&'a Value> {
 #[cfg(feature = "json")]
 pub fn json_set(value: &mut Value, path: &str, new_value: Value) -> bool {
     let mut parts = path.split('.').collect::<Vec<_>>();
-    if parts.is_empty() { return false; }
+    if parts.is_empty() {
+        return false;
+    }
     let last = parts.pop().unwrap();
     let mut current = value;
     for part in parts {
@@ -36,20 +38,32 @@ pub fn json_set(value: &mut Value, path: &str, new_value: Value) -> bool {
             }
             Value::Array(arr) => {
                 if let Ok(idx) = part.parse::<usize>() {
-                    if idx >= arr.len() { return false; }
+                    if idx >= arr.len() {
+                        return false;
+                    }
                     current = &mut arr[idx];
-                } else { return false; }
+                } else {
+                    return false;
+                }
             }
             _ => return false,
         }
     }
     match current {
-        Value::Object(map) => { map.insert(last.to_string(), new_value); true }
+        Value::Object(map) => {
+            map.insert(last.to_string(), new_value);
+            true
+        }
         Value::Array(arr) => {
             if let Ok(idx) = last.parse::<usize>() {
-                if idx >= arr.len() { return false; }
-                arr[idx] = new_value; true
-            } else { false }
+                if idx >= arr.len() {
+                    return false;
+                }
+                arr[idx] = new_value;
+                true
+            } else {
+                false
+            }
         }
         _ => false,
     }
@@ -57,4 +71,6 @@ pub fn json_set(value: &mut Value, path: &str, new_value: Value) -> bool {
 
 /// True if a value exists at `path`
 #[cfg(feature = "json")]
-pub fn json_has(value: &Value, path: &str) -> bool { json_get(value, path).is_some() }
+pub fn json_has(value: &Value, path: &str) -> bool {
+    json_get(value, path).is_some()
+}

@@ -1,18 +1,42 @@
 //! Encoding helpers
 
 /// Hex-encode bytes to lowercase string
-pub fn hex_encode(bytes: &[u8]) -> String { bytes.iter().map(|b| format!("{:02x}", b)).collect() }
+pub fn hex_encode(bytes: &[u8]) -> String {
+    bytes.iter().map(|b| format!("{b:02x}")).collect()
+}
 /// Decode lowercase/uppercase hex string into bytes
 pub fn hex_decode(s: &str) -> Option<Vec<u8>> {
-    if s.len() % 2 != 0 { return None; }
-    (0..s.len()).step_by(2).map(|i| u8::from_str_radix(&s[i..i+2], 16).ok()).collect()
+    if s.len() % 2 != 0 {
+        return None;
+    }
+    (0..s.len())
+        .step_by(2)
+        .map(|i| u8::from_str_radix(&s[i..i + 2], 16).ok())
+        .collect()
 }
 
 /// ROT13 transformation for ASCII letters
-pub fn rot13(s: &str) -> String { s.chars().map(|c| match c { 'a'..='z' => (((c as u8 - b'a' + 13) % 26) + b'a') as char, 'A'..='Z' => (((c as u8 - b'A' + 13) % 26) + b'A') as char, _ => c }).collect() }
+pub fn rot13(s: &str) -> String {
+    s.chars()
+        .map(|c| match c {
+            'a'..='z' => (((c as u8 - b'a' + 13) % 26) + b'a') as char,
+            'A'..='Z' => (((c as u8 - b'A' + 13) % 26) + b'A') as char,
+            _ => c,
+        })
+        .collect()
+}
 
 /// Caesar cipher for ASCII letters
-pub fn caesar_cipher(s: &str, shift: i8) -> String { let sh = ((shift%26)+26)%26; s.chars().map(|c| match c { 'a'..='z' => (((c as u8 - b'a' + sh as u8) % 26) + b'a') as char, 'A'..='Z' => (((c as u8 - b'A' + sh as u8) % 26) + b'A') as char, _ => c }).collect() }
+pub fn caesar_cipher(s: &str, shift: i8) -> String {
+    let sh = shift.rem_euclid(26) as u8;
+    s.chars()
+        .map(|c| match c {
+            'a'..='z' => (((c as u8 - b'a' + sh) % 26) + b'a') as char,
+            'A'..='Z' => (((c as u8 - b'A' + sh) % 26) + b'A') as char,
+            _ => c,
+        })
+        .collect()
+}
 
 /// Base32 encode (RFC 4648, no padding)
 pub fn base32_encode(bytes: &[u8]) -> String {
@@ -49,7 +73,10 @@ pub fn base32_decode(s: &str) -> Option<Vec<u8>> {
     let mut buffer: u64 = 0;
     let mut bits: u8 = 0;
     for &ch in s.as_bytes() {
-        let v = match val(ch) { Some(v) => v, None => continue } as u64;
+        let v = match val(ch) {
+            Some(v) => v,
+            None => continue,
+        } as u64;
         buffer = (buffer << 5) | v;
         bits += 5;
         while bits >= 8 {
@@ -60,4 +87,3 @@ pub fn base32_decode(s: &str) -> Option<Vec<u8>> {
     }
     Some(out)
 }
-
