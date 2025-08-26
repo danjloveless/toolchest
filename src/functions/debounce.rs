@@ -146,7 +146,9 @@ where
     ///
     /// This method consumes the handle and joins the worker thread. Pending
     /// scheduled work will not run.
-    pub fn stop(self) { std::mem::drop(self); }
+    pub fn stop(self) {
+        std::mem::drop(self);
+    }
 }
 
 impl<F> Drop for Debounced<F>
