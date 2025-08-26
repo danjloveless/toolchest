@@ -3,7 +3,6 @@
 [![Crates.io](https://img.shields.io/crates/v/toolchest.svg)](https://crates.io/crates/toolchest)
 [![Documentation](https://docs.rs/toolchest/badge.svg)](https://docs.rs/toolchest)
 [![CI](https://github.com/danjloveless/toolchest/workflows/CI/badge.svg)](https://github.com/danjloveless/toolchest/actions)
-[![Coverage](https://codecov.io/gh/danjloveless/toolchest/branch/main/graph/badge.svg)](https://codecov.io/gh/danjloveless/toolchest)
 
 Your essential collection of Rust utilities - everything `itertools` doesn't do.
 
