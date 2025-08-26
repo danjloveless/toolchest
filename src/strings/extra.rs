@@ -156,11 +156,13 @@ pub fn damerau_levenshtein(a: &str, b: &str) -> usize {
         return m;
     }
     let mut d = vec![vec![0usize; n + 1]; m + 1];
-    for i in 0..=m {
-        d[i][0] = i;
+    for (i, row) in d.iter_mut().enumerate().take(m + 1) {
+        row[0] = i;
     }
-    for j in 0..=n {
-        d[0][j] = j;
+    if let Some(first_row) = d.get_mut(0) {
+        for (j, cell) in first_row.iter_mut().enumerate().take(n + 1) {
+            *cell = j;
+        }
     }
     for i in 1..=m {
         for j in 1..=n {
@@ -346,10 +348,7 @@ pub fn split_words(s: &str) -> Vec<String> {
         }
         if ch.is_ascii_uppercase()
             && !current.is_empty()
-            && current
-                .chars()
-                .last()
-                .map_or(false, |c| c.is_ascii_lowercase())
+            && current.chars().last().is_some_and(|c| c.is_ascii_lowercase())
         {
             words.push(current.clone());
             current.clear();

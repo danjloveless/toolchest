@@ -30,12 +30,15 @@ fn test_rate_limiter() {
 }
 
 #[test]
-#[should_panic]
 fn test_circuit_breaker_opens() {
     let cb = CircuitBreaker::new(1, Duration::from_millis(10));
-    let _: Result<(), ()> = cb.call::<_, (), ()>(|| Err(()));
-    // Next call panics because circuit is open
-    let _: Result<(), ()> = cb.call::<_, (), ()>(|| Ok(()));
+    let _: Result<(), CircuitBreakerError<()>> = cb.call::<_, (), ()>(|| Err(()));
+    // Next call returns Open because circuit is open
+    let res: Result<(), CircuitBreakerError<()>> = cb.call::<_, (), ()>(|| Ok(()));
+    match res {
+        Err(CircuitBreakerError::Open) => {}
+        _ => panic!("expected CircuitBreakerError::Open"),
+    }
 }
 #[test]
 fn test_memoize_basic() {

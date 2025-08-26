@@ -9,12 +9,12 @@ fn next_u64(state: &mut u128) -> u64 {
 
 /// Random integer in [min, max)
 pub fn random_range(min: i64, max: i64) -> i64 {
-    let mut s = Instant::now().elapsed().as_nanos() as u128;
+    let mut s = Instant::now().elapsed().as_nanos();
     min + (next_u64(&mut s) as i64).rem_euclid(max - min)
 }
 /// Bernoulli trial with probability p_true
 pub fn random_bool(p_true: f64) -> bool {
-    let mut s = Instant::now().elapsed().as_nanos() as u128;
+    let mut s = Instant::now().elapsed().as_nanos();
     ((next_u64(&mut s) as f64) / (u64::MAX as f64)) < p_true
 }
 /// Choose a random element from slice
@@ -22,7 +22,7 @@ pub fn random_choice<T>(v: &[T]) -> Option<&T> {
     if v.is_empty() {
         None
     } else {
-        let mut s = Instant::now().elapsed().as_nanos() as u128;
+        let mut s = Instant::now().elapsed().as_nanos();
         v.get((next_u64(&mut s) as usize) % v.len())
     }
 }
@@ -42,7 +42,7 @@ pub fn weighted_choice<'a, T>(v: &'a [T], weights: &[f64]) -> Option<&'a T> {
         return None;
     }
     let total: f64 = weights.iter().sum();
-    let mut s = Instant::now().elapsed().as_nanos() as u128;
+    let mut s = Instant::now().elapsed().as_nanos();
     let mut r = ((next_u64(&mut s) as f64) / (u64::MAX as f64)) * total;
     for (item, &w) in v.iter().zip(weights.iter()) {
         if r < w {
@@ -54,7 +54,7 @@ pub fn weighted_choice<'a, T>(v: &'a [T], weights: &[f64]) -> Option<&'a T> {
 }
 /// Generate a random UUID v4 (non-crypto)
 pub fn uuid_v4() -> String {
-    let mut s = Instant::now().elapsed().as_nanos() as u128;
+    let mut s = Instant::now().elapsed().as_nanos();
     let mut bytes = [0u8; 16];
     for b in &mut bytes {
         *b = (next_u64(&mut s) & 0xFF) as u8;
@@ -66,6 +66,6 @@ pub fn uuid_v4() -> String {
 }
 /// Generate n random bytes (non-crypto)
 pub fn random_bytes(n: usize) -> Vec<u8> {
-    let mut s = Instant::now().elapsed().as_nanos() as u128;
+    let mut s = Instant::now().elapsed().as_nanos();
     (0..n).map(|_| (next_u64(&mut s) & 0xFF) as u8).collect()
 }
