@@ -57,7 +57,7 @@ pub fn find_files<P: AsRef<Path>>(root: P, pattern: &str) -> io::Result<Vec<Path
     let mut out = Vec::new();
     let pat = pattern.to_lowercase();
     for entry in walkdir::WalkDir::new(root) {
-        let entry = entry.map_err(|e| io::Error::new(io::ErrorKind::Other, e.to_string()))?;
+        let entry = entry.map_err(|e| io::Error::other(e.to_string()))?;
         if entry.file_type().is_file() {
             let name = entry.file_name().to_string_lossy().to_lowercase();
             if name.contains(&pat) {
