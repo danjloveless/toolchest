@@ -1,0 +1,55 @@
+[package]
+name = "toolchest"
+version = "0.0.1"
+authors = ["Your Name <email@example.com>"]
+edition = "2021"
+rust-version = "1.70.0"
+description = "Essential utility collection for Rust - the missing complement to itertools"
+documentation = "https://docs.rs/toolchest"
+homepage = "https://github.com/[org]/toolchest"
+repository = "https://github.com/[org]/toolchest"
+readme = "README.md"
+keywords = ["utility", "utils", "helpers", "toolkit", "lodash"]
+categories = ["algorithms", "data-structures", "text-processing"]
+license = "MIT OR Apache-2.0"
+exclude = [
+    ".github/*",
+    "tests/*",
+    "benches/*",
+    "examples/*",
+    ".gitignore",
+]
+
+[dependencies]
+# Zero runtime dependencies by default; optional JSON support
+serde = { version = "1.0", features = ["derive"], optional = true }
+serde_json = { version = "1.0", optional = true }
+walkdir = { version = "2.5", optional = true }
+
+[dev-dependencies]
+criterion = "0.5"
+proptest = "1.4"
+quickcheck = "1.0"
+
+[features]
+default = ["std"]
+std = []
+# no_std support will be partial, enabled per module
+json = ["serde", "serde_json"]
+fs = ["walkdir"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[profile.bench]
+inherits = "release"
+
+[[bench]]
+name = "strings"
+harness = false
+
+[[bench]]
+name = "math"
+harness = false
