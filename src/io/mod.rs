@@ -2,7 +2,7 @@
 
 use std::fs; use std::io::{self, Write}; use std::path::{Path, PathBuf};
 
-/// Read a text file as lines into Vec<String>
+/// Read a text file as lines into `Vec<String>`
 pub fn read_lines<P: AsRef<Path>>(path: P) -> io::Result<Vec<String>> { Ok(fs::read_to_string(path)?.lines().map(|s| s.to_string()).collect()) }
 
 /// Atomically write data to a file

@@ -34,7 +34,7 @@ pub fn lcm_u64(a: u64, b: u64) -> u64 {
     if a == 0 || b == 0 { 0 } else { a / gcd_u64(a, b) * b }
 }
 
-/// Linear interpolation between a and b by t in [0,1]
+/// Linear interpolation between a and b by t in \[0,1\]
 pub fn lerp(a: f64, b: f64, t: f64) -> f64 { a + (b - a) * t }
 
 /// Map value from one range to another
@@ -75,7 +75,7 @@ pub fn radians_to_degrees(rad: f64) -> f64 { rad.to_degrees() }
 
 /// Logistic sigmoid function
 pub fn sigmoid(x: f64) -> f64 { 1.0 / (1.0 + (-x).exp()) }
-/// Normalize x to [0,1] given min and max
+/// Normalize x to \[0,1\] given min and max
 pub fn normalize(x: f64, min: f64, max: f64) -> f64 { if max == min { 0.0 } else { (x - min) / (max - min) } }
 
 /// Euclidean distance between equal-length vectors

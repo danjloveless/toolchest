@@ -69,7 +69,7 @@ pub fn cron_matches(now: &chrono_like::DateTime, expr: &str) -> bool {
 pub mod chrono_like {
     #[derive(Clone, Copy)]
     /// Minimal DateTime containing only minute field
-    pub struct DateTime { /// Minute component [0,59]
+    pub struct DateTime { /// Minute component \[0,59\]
         pub minute: u32 }
 }
 
