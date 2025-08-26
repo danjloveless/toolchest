@@ -282,9 +282,9 @@ pub fn transpose<T: Clone>(matrix: &[Vec<T>]) -> Vec<Vec<T>> {
     let rows = matrix.len();
     let cols = matrix[0].len();
     let mut out = vec![vec![matrix[0][0].clone(); rows]; cols];
-    for r in 0..rows {
-        for c in 0..cols {
-            out[c][r] = matrix[r][c].clone();
+    for (r, row) in matrix.iter().enumerate().take(rows) {
+        for (c, cell) in row.iter().enumerate().take(cols) {
+            out[c][r] = cell.clone();
         }
     }
     out

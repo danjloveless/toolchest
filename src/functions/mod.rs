@@ -11,7 +11,7 @@ pub mod throttle;
 pub mod timeout;
 
 pub use backoff::retry_with_backoff;
-pub use circuit_breaker::{BreakerState, CircuitBreaker};
+pub use circuit_breaker::{BreakerState, CircuitBreaker, CircuitBreakerError};
 pub use compose::{compose, pipe, tap};
 pub use debounce::{debounce, Debounced};
 pub use memoize::memoize;

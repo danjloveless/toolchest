@@ -27,15 +27,15 @@ fn luhn(num: &str) -> bool {
 
 /// Stub: Validate IBAN (not implemented)
 pub fn validate_iban(_iban: &str) -> bool {
-    false
+    unimplemented!("IBAN validation not yet implemented")
 }
 /// Stub: Validate phone number (not implemented)
 pub fn validate_phone(_phone: &str) -> bool {
-    false
+    unimplemented!("Phone validation not yet implemented")
 }
 /// Stub: Validate SSN (not implemented)
 pub fn validate_ssn(_ssn: &str) -> bool {
-    false
+    unimplemented!("SSN validation not yet implemented")
 }
 /// True if string is ASCII
 pub fn is_ascii(s: &str) -> bool {

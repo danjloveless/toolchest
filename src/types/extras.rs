@@ -79,7 +79,7 @@ pub fn is_some_and<T, F: FnOnce(&T) -> bool>(opt: Option<T>, f: F) -> bool {
 }
 /// Result helper: predicate on Ok
 pub fn is_ok_and<T, E, F: FnOnce(&T) -> bool>(res: Result<T, E>, f: F) -> bool {
-    res.as_ref().is_ok_and(|v| f(v))
+    res.as_ref().is_ok_and(f)
 }
 /// Return reference or default
 pub fn as_ref_or<'a, T>(opt: Option<&'a T>, default: &'a T) -> &'a T {
@@ -87,7 +87,7 @@ pub fn as_ref_or<'a, T>(opt: Option<&'a T>, default: &'a T) -> &'a T {
 }
 /// Take Option value if predicate holds
 pub fn take_if<T, F: FnOnce(&T) -> bool>(opt: &mut Option<T>, f: F) -> Option<T> {
-    if opt.as_ref().is_some_and(|v| f(v)) {
+    if opt.as_ref().is_some_and(f) {
         opt.take()
     } else {
         None
