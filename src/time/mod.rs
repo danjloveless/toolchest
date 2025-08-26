@@ -1,8 +1,41 @@
-//! Time utilities
+//! Time utilities.
+//!
+//! Helpers for durations, timing, simple cron-like checks, and backoff
+//! iteration.
+//!
+//! Examples:
+//! ```rust
+//! use toolchest::time::{duration_humanize, parse_duration, Stopwatch, elapsed, BackoffIter, deadline};
+//! use std::time::{Duration, Instant};
+//!
+//! assert_eq!(duration_humanize(Duration::from_secs(3661)), "1h1m1s");
+//! assert_eq!(parse_duration("1h2m3s").unwrap(), Duration::from_secs(3723));
+//!
+//! let sw = Stopwatch::start_new();
+//! let _ = 1 + 1;
+//! let _elapsed = sw.elapsed();
+//!
+//! let (_res, took) = elapsed(|| 2 + 2);
+//! assert!(took >= Duration::from_millis(0));
+//!
+//! let mut iter = BackoffIter::new(Duration::from_millis(1));
+//! assert_eq!(iter.next().unwrap(), Duration::from_millis(1));
+//! assert_eq!(iter.next().unwrap(), Duration::from_millis(2));
+//!
+//! let dl = Instant::now();
+//! assert!(deadline(dl) || !deadline(dl));
+//! ```
 
 use std::time::{Duration, Instant};
 
-/// Human-readable duration like "1h2m3s"
+/// Human-readable duration like "1h2m3s".
+///
+/// Example:
+/// ```rust
+/// use toolchest::time::duration_humanize;
+/// use std::time::Duration;
+/// assert_eq!(duration_humanize(Duration::from_secs(65)), "1m5s");
+/// ```
 pub fn duration_humanize(d: Duration) -> String {
     let mut secs = d.as_secs();
     let hours = secs / 3600;
@@ -18,7 +51,14 @@ pub fn duration_humanize(d: Duration) -> String {
     }
 }
 
-/// Parse strings like "1h2m3s" into Duration
+/// Parse strings like "1h2m3s" into `Duration`.
+///
+/// Example:
+/// ```rust
+/// use toolchest::time::parse_duration;
+/// use std::time::Duration;
+/// assert_eq!(parse_duration("2m30s").unwrap(), Duration::from_secs(150));
+/// ```
 pub fn parse_duration(s: &str) -> Option<Duration> {
     let mut total_ms: u128 = 0;
     let mut num = String::new();
@@ -42,41 +82,56 @@ pub fn parse_duration(s: &str) -> Option<Duration> {
     Some(Duration::from_millis(total_ms as u64))
 }
 
-/// Simple stopwatch
+/// Simple stopwatch.
 pub struct Stopwatch {
     start: Instant,
 }
 impl Stopwatch {
-    /// Start a new stopwatch
+    /// Start a new stopwatch.
     pub fn start_new() -> Self {
         Self {
             start: Instant::now(),
         }
     }
-    /// Elapsed time since start
+    /// Elapsed time since start.
     pub fn elapsed(&self) -> Duration {
         self.start.elapsed()
     }
 }
 
-/// Measure closure execution time
+/// Measure closure execution time.
+///
+/// Example:
+/// ```rust
+/// use toolchest::time::elapsed;
+/// let (v, dur) = elapsed(|| 2 + 2);
+/// assert_eq!(v, 4);
+/// assert!(dur >= std::time::Duration::from_millis(0));
+/// ```
 pub fn elapsed<T, F: FnOnce() -> T>(f: F) -> (T, Duration) {
     let sw = Stopwatch::start_new();
     let v = f();
     (v, sw.elapsed())
 }
 
-/// True if now is past the deadline
+/// True if now is past the deadline.
+///
+/// Example:
+/// ```rust
+/// use toolchest::time::deadline;
+/// let dl = std::time::Instant::now();
+/// let _ = deadline(dl);
+/// ```
 pub fn deadline(d: Instant) -> bool {
     Instant::now() >= d
 }
 
-/// Iterator yielding exponentially increasing delays
+/// Iterator yielding exponentially increasing delays.
 pub struct BackoffIter {
     cur: Duration,
 }
 impl BackoffIter {
-    /// Create a backoff iterator starting at base
+    /// Create a backoff iterator starting at base.
     pub fn new(base: Duration) -> Self {
         Self { cur: base }
     }

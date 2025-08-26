@@ -1,4 +1,16 @@
-//! Validation helpers
+//! Validation helpers.
+//!
+//! Lightweight validators and stubs for common formats. Includes a Luhn
+//! implementation for credit card numbers and simple ASCII/UTF-8 checks.
+//! Placeholders are provided for IBAN/phone/SSN with clear stubs.
+//!
+//! Examples:
+//! ```rust
+//! use toolchest::validation::{validate_credit_card, is_ascii, is_utf8};
+//! assert!(validate_credit_card("4242424242424242"));
+//! assert!(is_ascii("hello"));
+//! assert!(is_utf8("ok".as_bytes()));
+//! ```
 
 /// Validate credit card number using Luhn algorithm
 pub fn validate_credit_card(num: &str) -> bool {

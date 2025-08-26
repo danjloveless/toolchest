@@ -15,12 +15,24 @@
 //! assert!(bucket < 10);
 //! ```
 
-/// Convenience hash for strings using djb2
+/// Convenience hash for strings using djb2.
+///
+/// Example:
+/// ```rust
+/// use toolchest::hash::{hash_code, djb2};
+/// assert_eq!(hash_code("abc"), djb2(b"abc"));
+/// ```
 pub fn hash_code(s: &str) -> u64 {
     djb2(s.as_bytes())
 }
 
-/// djb2 hash (64-bit variant)
+/// djb2 hash (64-bit variant).
+///
+/// Example:
+/// ```rust
+/// use toolchest::hash::djb2;
+/// assert_eq!(djb2(b"a"), 177670);
+/// ```
 pub fn djb2(bytes: &[u8]) -> u64 {
     let mut h: u64 = 5381;
     for &b in bytes {
@@ -28,7 +40,13 @@ pub fn djb2(bytes: &[u8]) -> u64 {
     }
     h
 }
-/// FNV-1a 64-bit hash
+/// FNV-1a 64-bit hash.
+///
+/// Example:
+/// ```rust
+/// use toolchest::hash::fnv1a;
+/// let _h = fnv1a(b"hello");
+/// ```
 pub fn fnv1a(bytes: &[u8]) -> u64 {
     let mut h: u64 = 0xcbf29ce484222325;
     for &b in bytes {
@@ -38,7 +56,14 @@ pub fn fnv1a(bytes: &[u8]) -> u64 {
     h
 }
 
-/// MurmurHash3 x86 32-bit
+/// MurmurHash3 x86 32-bit.
+///
+/// Example:
+/// ```rust
+/// use toolchest::hash::murmur3_32;
+/// let h = murmur3_32(b"key", 0);
+/// let _ = h;
+/// ```
 pub fn murmur3_32(bytes: &[u8], seed: u32) -> u32 {
     let mut h = seed;
     let c1 = 0xcc9e2d51u32;
@@ -85,7 +110,16 @@ pub fn murmur3_32(bytes: &[u8], seed: u32) -> u32 {
     h
 }
 
-/// Consistent hashing to bucket index [0, buckets)
+/// Consistent hashing to bucket index `[0, buckets)`.
+///
+/// Returns `0` when `buckets` is `0`.
+///
+/// Example:
+/// ```rust
+/// use toolchest::hash::consistent_hash;
+/// let b = consistent_hash("user42", 10);
+/// assert!(b < 10);
+/// ```
 pub fn consistent_hash(key: &str, buckets: u32) -> u32 {
     if buckets == 0 {
         0

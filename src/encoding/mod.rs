@@ -21,7 +21,17 @@
 pub fn hex_encode(bytes: &[u8]) -> String {
     bytes.iter().map(|b| format!("{b:02x}")).collect()
 }
-/// Decode lowercase/uppercase hex string into bytes
+/// Decode lowercase/uppercase hex string into bytes.
+///
+/// Returns `None` if the input length is odd or contains non-hex characters.
+///
+/// Example:
+/// ```rust
+/// use toolchest::encoding::{hex_encode, hex_decode};
+/// let s = hex_encode(&[0xde, 0xad, 0xbe, 0xef]);
+/// assert_eq!(s, "deadbeef");
+/// assert_eq!(hex_decode(&s).unwrap(), vec![0xde, 0xad, 0xbe, 0xef]);
+/// ```
 pub fn hex_decode(s: &str) -> Option<Vec<u8>> {
     if s.len() % 2 != 0 {
         return None;
@@ -32,7 +42,15 @@ pub fn hex_decode(s: &str) -> Option<Vec<u8>> {
         .collect()
 }
 
-/// ROT13 transformation for ASCII letters
+/// ROT13 transformation for ASCII letters.
+///
+/// Non-ASCII letters are left unchanged.
+///
+/// Example:
+/// ```rust
+/// use toolchest::encoding::rot13;
+/// assert_eq!(rot13("Hello, World!"), "Uryyb, Jbeyq!");
+/// ```
 pub fn rot13(s: &str) -> String {
     s.chars()
         .map(|c| match c {
@@ -43,7 +61,17 @@ pub fn rot13(s: &str) -> String {
         .collect()
 }
 
-/// Caesar cipher for ASCII letters
+/// Caesar cipher for ASCII letters.
+///
+/// Shifts alphabetic characters by `shift` (wrapping), preserves case, and
+/// leaves other characters unchanged. Negative shifts are supported.
+///
+/// Example:
+/// ```rust
+/// use toolchest::encoding::caesar_cipher;
+/// assert_eq!(caesar_cipher("abc XYZ", 2), "cde ZAB");
+/// assert_eq!(caesar_cipher("cde ZAB", -2), "abc XYZ");
+/// ```
 pub fn caesar_cipher(s: &str, shift: i8) -> String {
     let sh = shift.rem_euclid(26) as u8;
     s.chars()
@@ -55,7 +83,14 @@ pub fn caesar_cipher(s: &str, shift: i8) -> String {
         .collect()
 }
 
-/// Base32 encode (RFC 4648, no padding)
+/// Base32 encode (RFC 4648, no padding).
+///
+/// Example:
+/// ```rust
+/// use toolchest::encoding::{base32_encode, base32_decode};
+/// let enc = base32_encode(b"foo");
+/// assert_eq!(base32_decode(&enc).unwrap(), b"foo");
+/// ```
 pub fn base32_encode(bytes: &[u8]) -> String {
     const ALPHABET: &[u8; 32] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     let mut out = String::new();
@@ -76,7 +111,16 @@ pub fn base32_encode(bytes: &[u8]) -> String {
     }
     out
 }
-/// Base32 decode (RFC 4648, no padding)
+/// Base32 decode (RFC 4648, no padding).
+///
+/// Non-alphabet characters are ignored. Returns decoded bytes if successful.
+///
+/// Example:
+/// ```rust
+/// use toolchest::encoding::{base32_encode, base32_decode};
+/// let enc = base32_encode(b"test");
+/// assert_eq!(base32_decode(&enc).unwrap(), b"test");
+/// ```
 pub fn base32_decode(s: &str) -> Option<Vec<u8>> {
     fn val(c: u8) -> Option<u8> {
         match c {

@@ -1,8 +1,8 @@
 //! Type checking utilities
 
-/// Trait for checking if a value is empty
+/// Trait for checking if a value is empty.
 pub trait IsEmpty {
-    /// Returns true if the value is considered empty
+    /// Returns true if the value is considered empty.
     fn is_empty(&self) -> bool;
 }
 
@@ -36,7 +36,14 @@ impl<K, V> IsEmpty for std::collections::HashMap<K, V> {
     }
 }
 
-/// Check if a value is empty
-pub fn is_empty<T: IsEmpty>(value: &T) -> bool {
+/// Check if a value is empty.
+///
+/// Example:
+/// ```rust
+/// use toolchest::types::{IsEmpty, is_empty};
+/// assert!(is_empty(""));
+/// assert!(!is_empty(&vec![1]));
+/// ```
+pub fn is_empty<T: IsEmpty + ?Sized>(value: &T) -> bool {
     value.is_empty()
 }

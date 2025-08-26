@@ -1,4 +1,18 @@
-//! Type utilities module
+//! Type utilities module.
+//!
+//! Helpers for type checking, conversions, and ergonomic wrappers.
+//!
+//! Examples:
+//! ```rust
+//! use toolchest::types::{is_empty, parse_or_default, to_string_safe, NonEmptyVec};
+//! assert!(is_empty::<Vec<i32>>(&vec![]));
+//! let n: i32 = parse_or_default("not a number");
+//! assert_eq!(n, 0);
+//! assert_eq!(to_string_safe("hello"), "hello");
+//!
+//! let nev = NonEmptyVec::from_vec(vec![1,2,3]).unwrap();
+//! assert_eq!(nev.len(), 3);
+//! ```
 
 pub mod checking;
 pub mod conversion;
