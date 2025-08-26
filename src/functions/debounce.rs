@@ -1,15 +1,17 @@
 //! Debounce implementation
 
-use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::{Arc, Mutex};
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 /// A debounced function wrapper
 pub struct Debounced<F> {
     func: Arc<Mutex<F>>,
     delay: Duration,
-    call_seq: Arc<AtomicU64>,
+    // Background worker coordination
+    deadline: Arc<(Mutex<Option<Instant>>, Condvar)>,
+    started: Arc<AtomicBool>,
 }
 
 impl<F> Debounced<F>
@@ -18,20 +20,44 @@ where
 {
     /// Invoke the debounced function; schedules execution after the delay if no newer call occurs
     pub fn call(&self) {
-        let func = Arc::clone(&self.func);
-        let delay = self.delay;
-        let call_seq = Arc::clone(&self.call_seq);
-        // Assign a unique id to this call; only the latest id may execute after delay
-        let id = call_seq.fetch_add(1, Ordering::SeqCst) + 1;
+        // Update deadline to now + delay and notify worker
+        {
+            let (lock, cvar) = &*self.deadline;
+            let mut dl = lock.lock().unwrap();
+            *dl = Some(Instant::now() + self.delay);
+            cvar.notify_one();
+        }
 
-        thread::spawn(move || {
-            thread::sleep(delay);
-            // Only execute if no newer call occurred during the delay
-            if call_seq.load(Ordering::SeqCst) == id {
-                let func = func.lock().unwrap();
-                (*func)();
-            }
-        });
+        // Start worker once
+        if !self.started.swap(true, Ordering::SeqCst) {
+            let func = Arc::clone(&self.func);
+            let deadline = Arc::clone(&self.deadline);
+            thread::spawn(move || loop {
+                let (lock, cvar) = &*deadline;
+                // Wait for a deadline to be set
+                let mut dl = lock.lock().unwrap();
+                while dl.is_none() {
+                    dl = cvar.wait(dl).unwrap();
+                }
+                // Wait until the current deadline elapses, but extend if updated
+                while let Some(target) = *dl {
+                    let now = Instant::now();
+                    if now >= target {
+                        break;
+                    }
+                    let dur = target.saturating_duration_since(now);
+                    let (new_dl, _timeout_res) = cvar.wait_timeout(dl, dur).unwrap();
+                    dl = new_dl;
+                    // If deadline was updated during wait, loop continues
+                }
+                // Clear deadline so next burst sets a new one
+                *dl = None;
+                drop(dl);
+                // Execute debounced function once
+                let f = func.lock().unwrap();
+                (*f)();
+            });
+        }
     }
 }
 
@@ -43,6 +69,7 @@ where
     Debounced {
         func: Arc::new(Mutex::new(func)),
         delay,
-        call_seq: Arc::new(AtomicU64::new(0)),
+        deadline: Arc::new((Mutex::new(None), Condvar::new())),
+        started: Arc::new(AtomicBool::new(false)),
     }
 }
