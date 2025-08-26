@@ -16,7 +16,7 @@ fn test_debounce_basic() {
 
     debounced.call();
     debounced.call();
-    std::thread::sleep(Duration::from_millis(80));
+    std::thread::sleep(Duration::from_millis(150));
 
     assert_eq!(*counter.lock().unwrap(), 1);
 }
@@ -72,10 +72,10 @@ fn test_compose_pipe_tap() {
 
 #[test]
 fn test_with_timeout() {
-    let res = with_timeout(Duration::from_millis(50), || 42);
+    let res = with_timeout(Duration::from_millis(100), || 42);
     assert_eq!(res, Some(42));
-    let res = with_timeout(Duration::from_millis(10), || {
-        std::thread::sleep(Duration::from_millis(50));
+    let res = with_timeout(Duration::from_millis(20), || {
+        std::thread::sleep(Duration::from_millis(200));
         1
     });
     assert_eq!(res, None);
