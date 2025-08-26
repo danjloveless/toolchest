@@ -1,4 +1,26 @@
-//! Collection utilities similar to lodash (non-iterator focused)
+//! Collection utilities similar to lodash (non-iterator focused).
+//!
+//! This module provides convenient helpers for working with slices and vectors
+//! without requiring iterator chains. Functions include chunking, set-like
+//! operations, grouping, windowing, and more.
+//!
+//! Highlights:
+//! - Chunking: [`chunk`]
+//! - De-duplication: [`uniq`]
+//! - Set ops: [`difference`], [`intersection`], [`union`]
+//! - Grouping: [`group_by`], [`key_by`], [`count_by`]
+//! - Windows: [`sliding_window`]
+//! - Sampling: [`sample`], [`shuffle_in_place`]
+//!
+//! Basic examples:
+//! ```rust
+//! use toolchest::collections::{chunk, uniq, difference, sliding_window};
+//!
+//! assert_eq!(chunk(&[1,2,3,4,5], 2), vec![vec![1,2], vec![3,4], vec![5]]);
+//! assert_eq!(uniq(&[1,1,2,3,3]), vec![1,2,3]);
+//! assert_eq!(difference(&[1,2,3], &[2,4]), vec![1,3]);
+//! assert_eq!(sliding_window(&[1,2,3,4], 2, 1), vec![vec![1,2], vec![2,3], vec![3,4]]);
+//! ```
 
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;

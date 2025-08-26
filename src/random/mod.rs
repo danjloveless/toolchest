@@ -1,4 +1,25 @@
-//! Random utilities (non-cryptographic)
+//! Random utilities (non-cryptographic).
+//!
+//! Pseudo-random helpers for quick sampling, choices, and UUID-like IDs. These
+//! are not cryptographically secure and should not be used for security-
+//! sensitive purposes.
+//!
+//! Examples:
+//! ```rust
+//! use toolchest::random::{random_range, random_bool, random_choice, random_choices, uuid_v4, random_bytes};
+//!
+//! let r = random_range(5, 10);
+//! assert!(r >= 5 && r < 10);
+//! let _ = random_bool(0.5);
+//! let v = vec![1,2,3];
+//! let _ = random_choice(&v);
+//! let xs = random_choices(&v, 5);
+//! assert_eq!(xs.len(), 5);
+//! let id = uuid_v4();
+//! assert_eq!(id.len(), 36);
+//! let bytes = random_bytes(4);
+//! assert_eq!(bytes.len(), 4);
+//! ```
 
 use std::time::Instant;
 

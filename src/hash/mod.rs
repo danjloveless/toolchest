@@ -1,4 +1,19 @@
-//! Non-crypto hash helpers
+//! Non-crypto hash helpers.
+//!
+//! Convenient hashing utilities for quick IDs, bucket selection, and more.
+//! Includes simple algorithms like djb2 and FNV-1a, alongside MurmurHash3
+//! (x86 32-bit variant) and a `consistent_hash` helper for bucketing.
+//!
+//! Examples:
+//! ```rust
+//! use toolchest::hash::{hash_code, djb2, fnv1a, murmur3_32, consistent_hash};
+//!
+//! assert_eq!(hash_code("abc"), djb2(b"abc"));
+//! let _ = fnv1a(b"hello");
+//! let m = murmur3_32(b"key", 123);
+//! let bucket = consistent_hash("user42", 10);
+//! assert!(bucket < 10);
+//! ```
 
 /// Convenience hash for strings using djb2
 pub fn hash_code(s: &str) -> u64 {

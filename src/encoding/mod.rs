@@ -1,4 +1,21 @@
-//! Encoding helpers
+//! Encoding helpers.
+//!
+//! Lightweight string/byte encoding utilities including hex, ROT13, Caesar
+//! cipher, and Base32 (RFC 4648 without padding).
+//!
+//! Examples:
+//! ```rust
+//! use toolchest::encoding::{hex_encode, hex_decode, rot13, caesar_cipher, base32_encode, base32_decode};
+//!
+//! assert_eq!(hex_encode(&[0x0f, 0xaa]), "0faa");
+//! assert_eq!(hex_decode("0faa").unwrap(), vec![0x0f, 0xaa]);
+//!
+//! assert_eq!(rot13("Hello"), "Uryyb");
+//! assert_eq!(caesar_cipher("abcXYZ", 2), "cdeZAB");
+//!
+//! let b32 = base32_encode(b"hi");
+//! assert_eq!(base32_decode(&b32).unwrap(), b"hi");
+//! ```
 
 /// Hex-encode bytes to lowercase string
 pub fn hex_encode(bytes: &[u8]) -> String {
