@@ -58,6 +58,11 @@ pub fn fnv1a(bytes: &[u8]) -> u64 {
 
 /// MurmurHash3 x86 32-bit.
 ///
+/// Attribution: Algorithm by Austin Appleby. The MurmurHash3 specification and
+/// reference implementations have been placed in the public domain by the
+/// author. This implementation is a straightforward adaptation of the public
+/// domain reference for Rust.
+///
 /// Example:
 /// ```rust
 /// use toolchest::hash::murmur3_32;

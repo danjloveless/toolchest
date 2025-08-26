@@ -1,7 +1,7 @@
 [package]
 name = "toolchest"
-version = "0.0.1"
-authors = ["Your Name <email@example.com>"]
+version = "0.1.0"
+authors = ["Dan Loveless <danjloveless@gmail.com>"]
 edition = "2021"
 rust-version = "1.81.0"
 description = "Essential utility collection for Rust - the missing complement to itertools"

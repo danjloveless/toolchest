@@ -44,7 +44,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-toolchest = "0.0.1"
+toolchest = "0.1.0"
 ```
 
 MSRV: 1.81.0
@@ -88,7 +88,7 @@ For full API details, see the docs: https://docs.rs/toolchest
 - read/write/dirs/find files
 
 ### Validation
-- Luhn, ascii/utf8
+- Luhn, ASCII/UTF-8, IBAN, E.164 phone, US SSN
 
 ### Encoding
 - hex, rot13/caesar
@@ -114,7 +114,7 @@ stringcase = "0.2"
 
 # After
 [dependencies]
-toolchest = "1.0"
+toolchest = "0.1.0"
 ```
 
 ## Contributing

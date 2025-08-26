@@ -668,7 +668,7 @@ dependencies = [
 
 [[package]]
 name = "toolchest"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "criterion",
  "proptest",

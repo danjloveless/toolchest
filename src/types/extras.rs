@@ -92,9 +92,18 @@ impl<T> NonEmptyVec<T> {
     }
 }
 
-/// Placeholder cast function (not implemented without Any)
-pub fn try_cast<T: 'static, U: 'static + Clone>(_t: &T) -> Result<U, &'static str> {
-    Err("unsupported without Any")
+/// Attempt to downcast a reference `&T` to a cloned value of type `U`.
+///
+/// Returns `Ok(U)` when `T` is the same concrete type as `U` (or a type alias),
+/// otherwise returns `Err`.
+pub fn try_cast<T: 'static, U: 'static + Clone>(t: &T) -> Result<U, &'static str> {
+    use core::any::Any;
+    let any_ref = t as &dyn Any;
+    if let Some(u_ref) = any_ref.downcast_ref::<U>() {
+        Ok(u_ref.clone())
+    } else {
+        Err("downcast failed")
+    }
 }
 
 /// Clamp x to [min, max]

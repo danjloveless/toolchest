@@ -133,6 +133,9 @@ pub fn debounce<F>(func: F, delay: Duration) -> Debounced<F>
 where
     F: Fn() + Send + 'static,
 {
+    // Note: This spawns a background worker thread on first `call()`. The
+    // thread runs for the lifetime of the process and is not joined. Avoid
+    // creating many independent debouncers in long-running services.
     Debounced {
         func: Arc::new(Mutex::new(func)),
         delay,
