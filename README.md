@@ -4,21 +4,17 @@
 [![Documentation](https://docs.rs/toolchest/badge.svg)](https://docs.rs/toolchest)
 [![CI](https://github.com/danjloveless/toolchest/workflows/CI/badge.svg)](https://github.com/danjloveless/toolchest/actions)
 
-Your essential collection of Rust utilities – everything `itertools` doesn't do.
+Your essential collection of Rust utilities for strings, math, time, types, collections, and more.
 
 ## Why toolchest?
 
-Every craftsperson needs a well-organized toolchest. In Rust, you need two utility crates:
-- `itertools` - for collection/iterator operations
-- `toolchest` - for everything else
-
-Together, they provide a complete utility toolkit without scattered dependencies.
+Every craftsperson needs a well-organized toolchest. This crate provides a focused set of utilities
+that cover common tasks across domains without pulling in heavy dependencies.
 
 ## Quick Start
 
 ```rust
-use itertools::Itertools;     // For collection/iterator helpers
-use toolchest::prelude::*;    // For everything else
+use toolchest::prelude::*;
 use std::time::Duration;
 
 // String manipulation
